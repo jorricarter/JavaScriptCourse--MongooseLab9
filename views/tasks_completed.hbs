@@ -1,11 +1,20 @@
 
 <div class="tasklist">
   {{#each tasks}}
-    <li> <a href="task/{{this._id}}">{{this.text}}</a> </li>
+    <li> <a href="task/{{this._id}}">{{this.text}}</a>
+    <p>Date Created: {{this.dateCreated}}</p>
+    <p>Date Completed: {{this.dateCompleted}}</p></li>
   {{else}}
     <P>No tasks have been completed!</P>
   {{/each}}
 </div>
 
 
-
+<!--copied from 'alldone' button in index.hbs-->
+<div class="deleteDone">
+    {{#if tasks}}
+        <form action="/deleteDone" method="POST">
+            <input class="delete_done_button" type="submit" value="Delete completed tasks!">
+        </form>
+    {{/if}}
+</div>

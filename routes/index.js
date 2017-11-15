@@ -69,7 +69,7 @@ router.post('/add', function(req, res, next){
     // Insert into database. New tasks are assumed to be not completed.
 
     // Create a new Task, an instance of the Task schema, and call save()
-      new Task( { text: req.body.text, completed: false, dateCreated: Date()} ).save()
+      new Task( { text: req.body.text, completed: false, dateCreated: new Date(), dateCompleted: new Date} ).save()
           .then((newTask) => {
               console.log('The new task created is: ', newTask);
               res.redirect('/');
@@ -85,7 +85,7 @@ router.post('/add', function(req, res, next){
 /* POST task done */
 router.post('/done', function(req, res, next) {
 
-    Task.findOneAndUpdate( {_id: req.body._id}, {$set: {completed: true}}, {$set: {dateCompleted: Date()}} )
+    Task.findOneAndUpdate( {_id: req.body._id}, {$set: {completed: true}}, {$set: {dateCompleted: new Date()}} )
         .then((updatedTask) => {
             if (updatedTask) {   // updatedTask is the document *before* the update
                 res.redirect('/')  // One thing was updated. Redirect to home
@@ -115,6 +115,21 @@ router.post('/alldone', function(req, res, next) {
 
 });
 
+// copied from 'router.post(/alldone)'
+/* POST delete all completed tasks */
+router.post('/deleteDone', function(req, res, next) {
+
+    Task.deleteMany( { completed : true } )
+        .then( (result) => {
+            console.log("How many documents were modified? ", result.n);
+            req.flash('info', 'All completed tasks deleted!');
+            res.redirect('/');
+        })
+        .catch( (err) => {
+            next(err);
+        })
+
+});
 
 /* POST task delete */
 router.post('/delete', function(req, res, next){
