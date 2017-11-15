@@ -1,3 +1,4 @@
+//tell the page where to find things
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -6,13 +7,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var flash = require('express-flash');
 var session = require('express-session');
-
 var mongoose = require('mongoose');
-
-// On your own computer, if can set environment variables
-// Set the environment variable MONGO_URL to the correct URL
-// If you can't set environment variables on your system, replace
-// process.env.MONGO_URL with the actual URL string
+//provides login info while ensuring the login info doesn't get passed on to other people who use this program.
 var db_url = process.env.MONGO_URL;
 
 mongoose.connect(db_url, {useMongoClient: true})
@@ -63,5 +59,5 @@ app.use(express.static(path.join(__dirname, 'public')));
         res.render('error');
     });
 
-
+//all code needs to be above this or it won't run.
 module.exports = app;

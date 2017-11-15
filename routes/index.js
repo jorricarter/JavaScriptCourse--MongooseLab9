@@ -1,7 +1,9 @@
+//these are to tell the page where to find things
 var express = require('express');
 var router = express.Router();
 var Task = require('../models/task');
 
+//displays all tasks marked as "complete=false" on homepage as 'incomplete tasks'.
 /* GET home page with all incomplete tasks */
 router.get('/', function(req, res, next) {
 console.log('test');
@@ -14,19 +16,10 @@ console.log('test');
 
 });
 
-
 /* GET details about one task */
 router.get('/task/:_id', function(req, res, next) {
 
-/* This route matches URLs in the format task/anything
-Note the format of the route path is  /task/:_id
-This matches task/1 and task/2 and task/3...
-Whatever is after /task/ will be available to the route as req.params._id
-
-For our app, we expect the URLs to be something like task/1234567890abcdedf1234567890
-Where the number is the ObjectId of a task.
-So the req.params._id will be the ObjectId of the task to find
-*/
+//find the specified task (if it exists)
 
     Task.findOne({_id: req.params._id} )
             .then( (task) => {
@@ -41,7 +34,7 @@ So the req.params._id will be the ObjectId of the task to find
             })
 });
 
-
+//this is to display all completed tasks on the tasks_completed page.
 /* GET completed tasks */
 router.get('/completed', function(req, res, next){
 
@@ -54,7 +47,7 @@ router.get('/completed', function(req, res, next){
 
 });
 
-
+//this is so the page knows how to add tasks
 /* POST new task */
 router.post('/add', function(req, res, next){
 
@@ -81,7 +74,8 @@ router.post('/add', function(req, res, next){
 
 });
 
-
+//this is to change a task from {completed=true} to {completed=false}.
+//this way, it stops showing up on the incomplete page and starts showing up on the 'completed' page.
 /* POST task done */
 router.post('/done', function(req, res, next) {
 
@@ -99,7 +93,7 @@ router.post('/done', function(req, res, next) {
 
 });
 
-
+//tells the page how to find and modify all tasks to be marked as completed
 /* POST all tasks done */
 router.post('/alldone', function(req, res, next) {
 
@@ -133,13 +127,13 @@ router.post('/deleteDone', function(req, res, next) {
 
 /* POST task delete */
 router.post('/delete', function(req, res, next){
-
+//in tasks.delete(if id matches this id)
     Task.deleteOne( { _id : req.body._id } )
         .then( (result) => {
-
+//if something was deleted, redirect to page.
             if (result.deletedCount === 1) {  // one task document deleted
                 res.redirect('/');
-
+//if nothing was found to delete, notify user of error.
             } else {
                 // The task was not found. Report 404 error.
                 res.status(404).send('Error deleting task: not found');
